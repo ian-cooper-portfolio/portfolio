@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ian Cooper | Mechanical Engineer</title>
+    <style>
+        :root {
+            --forest-dark: #243027;
+            --forest-muted: #3a4d40;
+            --sage-accent: #5a7a61;
+            --bg-calm: #e8edea; 
+            --card-white: #ffffff;
+            --text-main: #2f3631;
+            --text-light: #555f58;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, sans-serif;
+            line-height: 1.7;
+            color: var(--text-main);
+            background-color: var(--bg-calm);
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: var(--forest-dark);
+            color: white;
+            padding: 5rem 1rem;
+            text-align: center;
+        }
+
+        
+        .profile-img-placeholder img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%; /* Ensures the image itself is clipped to a circle */
+            object-fit: cover;  /* Keeps aspect ratio while filling the circle */
+            display: block;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 2.5rem;
+            letter-spacing: 2px;
+            font-weight: 300;
+        }
+
+        .container {
+            max-width: 950px;
+            margin: -40px auto 0;
+            padding: 0 2rem 5rem;
+        }
+
+        /* --- About Me Section --- */
+        .about-me {
+            background: var(--card-white);
+            padding: 3rem;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            flex-wrap: wrap;
+            margin-bottom: 4rem;
+        }
+
+        .profile-img-placeholder {
+            width: 160px;
+            height: 160px;
+            background-color: var(--bg-calm);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--sage-accent);
+            font-size: 1.5rem;
+            font-weight: bold;
+            border: 2px solid var(--sage-accent);
+        }
+
+        /* --- Tabbed Navigation --- */
+        .tabs {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .tab-btn {
+            padding: 10px 5px;
+            border: none;
+            background: none;
+            cursor: pointer;
+            font-weight: 500;
+            color: var(--text-light);
+            font-size: 1rem;
+            transition: 0.3s;
+            border-bottom: 2px solid transparent;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .tab-btn.active {
+            color: var(--forest-dark);
+            border-bottom: 2px solid var(--sage-accent);
+        }
+
+        .tab-content {
+            background: var(--card-white);
+            padding: 3.5rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.03);
+            display: none;
+            text-align: center;
+        }
+
+        .tab-content.active { display: block; }
+
+        .centered-list {
+            list-style: none;
+            padding: 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            color: var(--text-light);
+            margin-top: 1rem;
+        }
+
+        .centered-list li::after { content: "•"; margin-left: 1rem; color: var(--sage-accent); }
+        .centered-list li:last-child::after { content: ""; }
+
+        h3 { color: var(--forest-dark); margin-top: 0; font-weight: 600; font-size: 1.4rem; }
+        h4 { color: var(--sage-accent); margin: 1.5rem 0 0.5rem 0; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        /* --- Visual Projects Grid --- */
+        .project-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            margin-top: 2rem;
+        }
+
+        .card {
+            background: var(--card-white);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        .card:hover { transform: translateY(-10px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
+
+        .card-img-container {
+            height: 400px; /* Increased height */
+            background-color: #d1d9d4;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Change to 'contain' if you don't want any cropping at all */
+            display: block;
+        }
+
+        .card-content { padding: 2rem; }
+
+        /* The block that had the error - now fixed */
+        .card-content p {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;  
+            overflow: hidden;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        /* --- MODAL & CAROUSEL --- */
+        .modal {
+            display: none; 
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(36, 48, 39, 0.98);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: var(--card-white);
+            margin: 50px auto;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 850px;
+            position: relative;
+            animation: slideIn 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .close-modal {
+            position: absolute;
+            right: 20px;
+            top: 15px;
+            color: white;
+            font-size: 35px;
+            font-weight: bold;
+            cursor: pointer;
+            z-index: 2100;
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+
+        .carousel-view {
+            position: relative;
+            width: 100%;
+            height: 450px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            padding: 20px 15px;
+            cursor: pointer;
+            font-size: 24px;
+            transition: 0.3s;
+        }
+
+        .nav-btn:hover { background: rgba(255,255,255,0.3); }
+        .prev-btn { left: 0; }
+        .next-btn { right: 0; }
+
+        .img-counter {
+            position: absolute;
+            bottom: 15px;
+            background: rgba(0,0,0,0.6);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+
+        .modal-body { padding: 2.5rem 3rem; }
+
+        footer {
+            background-color: var(--forest-dark);
+            color: white;
+            padding: 5rem 1rem;
+            text-align: center;
+        }
+
+        .footer-btns { display: flex; justify-content: center; gap: 1.5rem; margin-top: 2rem; }
+
+        .btn {
+            padding: 12px 30px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .btn-primary { background-color: var(--sage-accent); color: white; border: 1px solid var(--sage-accent); }
+        .btn-outline { border: 1px solid white; color: white; }
+
+        @media (max-width: 768px) {
+            .carousel-view { height: 300px; }
+            .modal-body { padding: 1.5rem; }
+            .about-me { padding: 2rem; text-align: center; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>IAN COOPER</h1>
+    <p style="opacity: 0.8; font-weight: 300; margin-top: 10px; letter-spacing: 1px;">Mechanical Engineer</p>
+</header>
+
+<div class="container">
+    <section class="about-me">
+        <div class="profile-img-placeholder"> 
+            <img src="headshot.jpg" alt="Ian Cooper Headshot">
+        </div>
+        <div style="flex: 1; min-width: 300px;">
+            <h2 style="font-weight: 300; margin-bottom: 1rem;">About Me</h2>
+            <p style="color: var(--text-light); margin: 0;">
+                Hello! My name is Ian Cooper and I’m a Mechanical Engineering student at the University of Central Florida. Ever since a young age I’ve been passionate about figuring out how different machines and technologies operate, with an interest especially in machine design and mechatronics! I previously worked at Limbitless Solutions on the Manufacturing and R&D teams which allowed me to use a variety of manufacturing tools to help support and build different bionic technologies. When I’m not in school or working, you can find me practicing martial arts, playing the drums, playing video games, and reading!
+            </p>
+        </div>
+    </section>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'work')">Experience</button>
+        <button class="tab-btn" onclick="openTab(event, 'skills')">Skills</button>
+        <button class="tab-btn" onclick="openTab(event, 'education')">Education</button>
+    </div>
+
+    <div id="work" class="tab-content active">
+        <span style="font-size: 0.85rem; color: #88948c; letter-spacing: 1px;">MAY 2025 — DEC 2025</span>
+        <h3>Limbitless Solutions</h3>
+        <p style="font-weight: 500; color: var(--sage-accent);">Assistant Scholar | Manufacturing & R&D Teams</p>
+        <h4>Focus Areas</h4>
+        <ul class="centered-list">
+            <li>CAD Toolpathing & Design</li>
+            <li>CNC Machine Operation</li>
+            <li>Prototyping Systems</li>
+            <li>Cross-disciplinary Collaboration</li>
+        </ul>
+    </div>
+
+    <div id="skills" class="tab-content">
+        <h3>Technical Expertise</h3>
+        <h4>Software & Programming</h4>
+        <ul class="centered-list">
+            <li>Solidworks</li><li>Fusion 360</li><li>Python</li><li>C# / C++</li><li>JavaScript</li>
+        </ul>
+        <h4>Manufacturing</h4>
+        <ul class="centered-list">
+            <li>CNC Milling</li><li>Lathe</li><li>3D Printing</li><li>Laser Cutting</li>
+        </ul>
+    </div>
+
+    <div id="education" class="tab-content">
+        <h3>University of Central Florida</h3>
+        <p style="font-weight: 500;">Burnett Honors College</p>
+        <p style="color: var(--text-light);">B.S. Mechanical Engineering | GPA: 3.39</p>
+    </div>
+
+    <h2 style="text-align: center; margin: 5rem 0 2rem; font-weight: 300; color: var(--forest-dark);">Projects</h2>
+    
+    <div class="project-grid">
+        <div class="card" onclick="openProject('Aerial Carousel Spinner', ['Steel.png', 'Mechanism1.jpg', 'Mechanism2.jpg'], 
+        'I was part of a team that developed an Aerial Spinning Carousel Ride in the vein of Dumbo or Astral Orbiter! My role in this project was mainly prototyping and designing the mechanism that allowed the ride to rotate and move the ride vehicles up and down, alongside doing some Cad work on miscellaneous parts of the ride. The ride rotation was achieved using a mix of stepper motors, ball bearings, and an intricately designed gear system that connected the stepper rotation to the bottom of the ride. Another team designed and cut the wooden base of the ride, with a small round hole being made for where the motors would be. We then had the motors placed on a platform in the indentation, with a 3D Printed gear being attached to the rotating knob. This gear was designed to align perfectly with another 3D Printed gear that would be attached to the bottom of the main ride system. In order for the gears to spin more smoothly, we had a small indentation which perfectly matched the diameter of the ride system made and placed ball bearing in this indentation. This allowed for the gear connected to the servo motor to easily rotate the gear connected to the ride system without friction, allowing for swift rotation. The ride systems vertical movement was achieved using servo motors, wooden pole, a 3D printed connector, and a slip ring. We had an arduino board that had the servo movement code within the wooden base of the ride. The wires on the servo motors were connected to this arduino board, with the wires going through a slip ring to be unaffected by the rotation of the base. These servo motors were placed at the bottom of the ride vehicle, with there being a metal rod attached to the fin of the motor. We then attached wooden rods that held the ride vehicles to the inner walls of the ride vehicle through a hinge system. Then, the metal rod was attached to the wooden rods through a 3D printed connection. This meant that as the motors moved their fins up, the metal rod would also move up, changing the height of the ride vehicles.')">
+            <div class="card-img-container">
+                <img src="Steel.png" alt="Aerial Carousel">
+            </div>
+            <div class="card-content">
+                <h3>Aerial Carousel Spinner</h3>
+                <p>I was part of a team that developed an Aerial Spinning Carousel Ride...</p>
+            </div>
+        </div>
+
+        <div class="card" onclick="openProject('PRISM Robotic Hand', ['Prism1.png', 'Prism2.png', 'Prism3.png'], 'I was a part of a team that created a working 3D printed robotic hand! My main role in this project was helping with the CAD work for the palm and the wrist areas of the hand, while also helping to design the mechanism that would allow the hand to rotate and move realistically. When CADing the hand the main goal in mind was to try to figure out a way to keep the hand as lightweight and as small as possible, while still being able to fit all of the necessary motors inside. I did many measurements of the servos and different materials that would be needed in order to get the hand properly working, and did a general sketch of the hand prototype with the different dimensions listed. I also needed to collaborate with other people on the project who were CADing different aspects of the hand to make sure that all of our pieces would be able to perfectly fit together and work correctly. After working with the team and going through a few designs, we were able to figure out a great model and then we started to work on creating the CAD files for the hand.')">
+            <div class="card-img-container" style="display:flex; align-items:center; justify-content:center; background:#d1d9d4;">
+                <img src="Prism1.png" alt="PrismCAD">
+            </div>
+            <div class="card-content">
+                <h3>PRISM Robotic Hand</h3>
+                <p>I was a part of a team that created a working 3D printed ...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="projectModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeProject()">&times;</span>
+        
+        <div class="carousel-view">
+            <button class="nav-btn prev-btn" onclick="changeImage(-1)">&#10094;</button>
+            <img id="modalImg" class="modal-image" src="" alt="Project">
+            <button class="nav-btn next-btn" onclick="changeImage(1)">&#10095;</button>
+            <div id="imgCounter" class="img-counter">1 / 1</div>
+        </div>
+
+        <div class="modal-body">
+            <h2 id="modalTitle" style="color: var(--forest-dark); margin-bottom: 10px;"></h2>
+            <p id="modalDescription" style="color: var(--text-main); font-size: 1.05rem; line-height: 1.8; margin-top: 0;"></p>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <p style="font-size: 1.2rem; font-weight: 300;">Let's connect.</p>
+    <div class="footer-btns">
+        <a href="Ian_Cooper_Resume.docx.pdf" class="btn btn-primary" target="_blank" download="Ian_Cooper_Resume.docx.pdf">DOWNLOAD RESUME</a>
+        <a href="https://www.linkedin.com/in/iancooper121/" target="_blank" class="btn btn-outline">LINKEDIN</a>
+    </div>
+</footer>
+
+<script>
+    // Tab Script
+    function openTab(evt, tabName) {
+        let contents = document.getElementsByClassName("tab-content");
+        for (let i = 0; i < contents.length; i++) { contents[i].style.display = "none"; }
+        let btns = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < btns.length; i++) { btns[i].classList.remove("active"); }
+        document.getElementById(tabName).style.display = "block";
+        evt.currentTarget.classList.add("active");
+    }
+
+    // Modal & Carousel Script
+    let currentImages = [];
+    let currentIndex = 0;
+    const modal = document.getElementById("projectModal");
+
+    function openProject(title, images, description) {
+        currentImages = images;
+        currentIndex = 0;
+        document.getElementById("modalTitle").innerText = title;
+        document.getElementById("modalDescription").innerText = description;
+        updateDisplay();
+        modal.style.display = "block";
+        document.body.style.overflow = "hidden"; 
+    }
+
+    function changeImage(step) {
+        currentIndex += step;
+        if (currentIndex >= currentImages.length) currentIndex = 0;
+        if (currentIndex < 0) currentIndex = currentImages.length - 1;
+        updateDisplay();
+    }
+
+    function updateDisplay() {
+        document.getElementById("modalImg").src = currentImages[currentIndex];
+        document.getElementById("imgCounter").innerText = (currentIndex + 1) + " / " + currentImages.length;
+    }
+
+    function closeProject() {
+        modal.style.display = "none";
+        document.body.style.overflow = "auto";
+    }
+
+    // Keyboard controls
+    document.addEventListener('keydown', function(e) {
+        if (modal.style.display === "block") {
+            if (e.key === "ArrowLeft") changeImage(-1);
+            if (e.key === "ArrowRight") changeImage(1);
+            if (e.key === "Escape") closeProject();
+        }
+    });
+
+    window.onclick = function(e) { if (e.target == modal) closeProject(); }
+</script>
+
+</body>
+</html>
